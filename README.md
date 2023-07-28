@@ -168,7 +168,7 @@ kubectl get pods - смотрим
 kubectl describe pod nginx - подробная информация
 ```
 replicasets.yml
-```
+```yml
 apiVersion: apps/v1
 kind: ReplicaSet
 metadata:
