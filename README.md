@@ -61,6 +61,10 @@ find / -name *.toml - /etc/containerd/config.toml - находим
 rm /etc/containerd/config.toml - и удаляем файл
 systemctl restart containerd - перезапускаем
 ```
+Если надо сбросить все и откатиться на начало
+```
+kubeadm reset
+```
 Если всё прошло успешно, то в консоль выведется команда для присоединения нод к кластеру, выполняем её:
 ```
 kubeadm join <control-plane-host>:<control-plane-port> --token <token> --discovery-token-ca-cert-hash sha256:<hash>
@@ -138,65 +142,3 @@ helm get manifest mycahart
 helm uninstall mycahart
 ```
 
-
-
-**Rotoro**
-```
-kubectl run nginx --image=nginx - создаем
-kubectl get pods - смотрим
-kubectl describe pod nginx - подробная информация
-kubectl get pods -o wide - показывает дополнительные поля
-kubectl delete pod nginx
-```
-pod.yml
-```yml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: nginx
-  labels:
-    app: nginx
-    type: frontend
-spec:
-  containers:
-  - name: nginx
-    image: nginx
-```
-```
-kubectl create -f pod.yml - создаем
-kubectl get pods - смотрим
-kubectl describe pod nginx - подробная информация
-```
-replicasets.yml
-```yml
-apiVersion: apps/v1
-kind: ReplicaSet
-metadata:
-  name: myapp-replicaset
-  labels:
-    app: myapp
-spec:
-  template:
-    metadata:
-      name: nginx2
-      labels:
-        app: myapp
-    spec:
-      containers:
-      - name: nginx
-        image: nginx
-  replicas: 3
-  selector:
-    matchLabels:
-      app: myapp
-```
-```
-kubectl create -f replicasets.yml - создаем
-kubectl get rs - смотрим replicasets
-kubectl get po - смотрим поды
-kubectl delete po myapp-replicaset-28w4l - удаляем под
-kubectl get po - проверяем что автоматом поднялся еще один
-kubectl edit rs myapp-replicaset - редактируем rs через vi
-kubectl scale rs myapp-replicaset --replicas=2 - или редактор реплик на лету
-kubectl delete rs myapp-replicaset
-```
